@@ -2,6 +2,10 @@
 
 use Backend;
 use System\Classes\PluginBase;
+use Cms\Classes\Page;
+use Cms\Classes\Theme;
+use Event;
+use Yaml;
 
 /**
  * PageFields Plugin Information File
@@ -16,10 +20,10 @@ class Plugin extends PluginBase
     public function pluginDetails()
     {
         return [
-            'name'        => 'PageFields',
+            'name' => 'PageFields',
             'description' => 'Manage content structure for page',
-            'author'      => 'Mateusz Kulpa',
-            'icon'        => 'icon-leaf'
+            'author' => 'Mateusz Kulpa',
+            'icon' => 'icon-leaf'
         ];
     }
 
@@ -30,67 +34,37 @@ class Plugin extends PluginBase
      */
     public function register()
     {
+        Event::listen('backend.form.extendFields', function ($widget) {
+            if (!$widget->model instanceof \Cms\Classes\Page) {
+                return;
+            }
 
+            if ($widget->isNested) {
+                return;
+            }
+
+            $currentPageFileName = $widget->model->getBaseFileName();
+            $themeDirName = Theme::getEditTheme()->getDirName();
+            $pageFieldsPath = themes_path('./' . $themeDirName . '/meta/page-fields/' . $currentPageFileName . '.yaml');
+            if (!file_exists($pageFieldsPath)) return;
+
+            $fields = Yaml::parseFile($pageFieldsPath);
+            $fields = $this->updateFieldsNames($fields);
+            $widget->addTabFields($fields);
+        });
     }
 
-    /**
-     * Boot method, called right before the request route.
-     *
-     * @return array
-     */
-    public function boot()
+    private function updateFieldsNames(array $fields)
     {
-
-    }
-
-    /**
-     * Registers any front-end components implemented in this plugin.
-     *
-     * @return array
-     */
-    public function registerComponents()
-    {
-        return []; // Remove this line to activate
-
-        return [
-            'MKulpa\PageFields\Components\MyComponent' => 'myComponent',
-        ];
-    }
-
-    /**
-     * Registers any back-end permissions used by this plugin.
-     *
-     * @return array
-     */
-    public function registerPermissions()
-    {
-        return []; // Remove this line to activate
-
-        return [
-            'mkulpa.pagefields.some_permission' => [
-                'tab' => 'PageFields',
-                'label' => 'Some permission'
-            ],
-        ];
-    }
-
-    /**
-     * Registers back-end navigation items for this plugin.
-     *
-     * @return array
-     */
-    public function registerNavigation()
-    {
-        return []; // Remove this line to activate
-
-        return [
-            'pagefields' => [
-                'label'       => 'PageFields',
-                'url'         => Backend::url('mkulpa/pagefields/mycontroller'),
-                'icon'        => 'icon-leaf',
-                'permissions' => ['mkulpa.pagefields.*'],
-                'order'       => 500,
-            ],
-        ];
+        $results = [];
+        foreach ($fields as $key => $field) {
+            if($field['type']  === 'repeater') {
+                $results["viewBag[$key]"] = $field;
+            }
+            else {
+                $results["settings[$key]"] = $field;
+            }
+        }
+        return $results;
     }
 }
