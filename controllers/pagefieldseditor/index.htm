@@ -26,7 +26,7 @@
                 data-request-confirm="Do you really want to delete this schema?">
         </button>
         <span class="btn-text">
-                or <a href="<?= Backend::url('cms') ?>">Back</a>
+                or <a href="<?= Backend::url('cms') . '?page=' . Request::input('page')  ?>">Back</a>
         </span>
     </div>
 </div>

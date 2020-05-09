@@ -29,7 +29,26 @@ const onTabShown = (event) => {
     doneTabs.push(target);
 }
 
+
+const getQueryParam = (key) => {
+    const url = new URL(window.location.href);
+    const params = new URLSearchParams(url.search);
+    return params.get(key);
+}
+
+const openTabByQuery = () => {
+    const pageParam = getQueryParam('page');
+    if(pageParam === null) return;
+
+    const sidePanelItem = document.querySelector(`[name='template[${pageParam}.htm]']`).previousElementSibling;
+    setTimeout(() => {
+        sidePanelItem.click();
+    },0)
+}
+
 $(function () {
     const $masterTabs = $('#cms-master-tabs')
     $masterTabs.on('shown.bs.tab', onTabShown);
+
+    openTabByQuery();
 })
