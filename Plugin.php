@@ -27,6 +27,15 @@ class Plugin extends PluginBase
         ];
     }
 
+    public function boot(){
+
+        Event::listen('backend.page.beforeDisplay', function($controller, $action, $params) {
+            if ($controller instanceof \Cms\Controllers\Index) {
+                $controller->addJs('/plugins/mkulpa/pagefields/assets/js/main.js');
+            }
+        });
+    }
+
     /**
      * Register method, called when the plugin is first registered.
      *

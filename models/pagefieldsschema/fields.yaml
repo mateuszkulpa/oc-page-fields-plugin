@@ -1,0 +1,8 @@
+secondaryTabs:
+  stretch: true
+  fields:
+    content:
+      tab: cms::lang.editor.code
+      stretch: true
+      type: codeeditor
+      language: twig

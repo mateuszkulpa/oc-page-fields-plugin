@@ -1,0 +1,34 @@
+<?= Form::open(['class'=>'layout']) ?>
+
+<h4>
+    Schema editor for <b><?= Request::input('page') . '.htm' ?></b>
+</h4>
+
+<div class="layout-row">
+    <?= $widget->render() ?>
+</div>
+
+<div class="form-buttons">
+    <div class="loading-indicator-container">
+        <button
+                type="button"
+                data-request="onUpdate"
+                data-hotkey="ctrl+s, cmd+s"
+                data-load-indicator="Saving schema..."
+                class="btn btn-default">
+            Save
+        </button>
+        <button
+                type="button"
+                class="oc-icon-trash-o btn-icon danger pull-right"
+                data-request="onDelete"
+                data-load-indicator="Deleting schema..."
+                data-request-confirm="Do you really want to delete this schema?">
+        </button>
+        <span class="btn-text">
+                or <a href="<?= Backend::url('cms') ?>">Back</a>
+        </span>
+    </div>
+</div>
+
+<?= Form::close() ?>
