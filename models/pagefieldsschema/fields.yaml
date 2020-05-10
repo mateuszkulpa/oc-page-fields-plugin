@@ -5,4 +5,4 @@ secondaryTabs:
       tab: cms::lang.editor.code
       stretch: true
       type: codeeditor
-      language: twig
+      language: yaml
