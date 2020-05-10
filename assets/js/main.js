@@ -19,6 +19,8 @@ const onTabShown = (event) => {
     const tabId = target.closest('li').getAttribute('data-tab-id');
     const selectedSidePanelItem = sidePanel.querySelector(`[data-id='${tabId}']`);
 
+    if(!selectedSidePanelItem) return;
+
     const templateName = findTemplateName(selectedSidePanelItem);
     const editSchemaUrl = $.oc.backendUrl(`${PLUGIN_BASE_URL}/?page=${templateName}`);
 

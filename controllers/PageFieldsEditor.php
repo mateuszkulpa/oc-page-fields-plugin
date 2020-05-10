@@ -5,15 +5,18 @@ namespace MKulpa\PageFields\Controllers;
 use MKulpa\PageFields\Models\PageFieldsSchema;
 use Backend\Classes\Controller;
 use Cms\Classes\Theme;
+use October\Rain\Filesystem\Filesystem;
+use October\Rain\Support\Facades\Flash;
 use Request;
 
 
 class PageFieldsEditor extends Controller
 {
-    private function getFieldsPath($page)
+    private $fileSystem;
+    public function __construct()
     {
-        $themeDirName = Theme::getActiveTheme()->getDirName();
-        return themes_path('./' . $themeDirName . '/meta/page-fields/' . $page . '.yaml');
+        $this->fileSystem = new Filesystem();
+        parent::__construct();
     }
 
     public function index()
@@ -28,12 +31,47 @@ class PageFieldsEditor extends Controller
     {
         $page = Request::input('page');
         $content = Request::input('content');
-        PageFieldsSchema::saveSchema($this->getFieldsPath($page), $content);
+        $this->saveSchema($this->getFieldsPath($page), $content);
+        Flash::success('Page fields schema updated');
     }
 
     public function onDelete()
     {
         $page = Request::input('page');
-        PageFieldsSchema::deleteSchema($this->getFieldsPath($page));
+        $this->deleteSchema($this->getFieldsPath($page));
+        Flash::info('Page fields schema deleted');
     }
+
+    private function getFieldsPath($page)
+    {
+        $themeDirName = Theme::getActiveTheme()->getDirName();
+        return themes_path('./' . $themeDirName . '/meta/page-fields/' . $page . '.yaml');
+    }
+
+    private function createDirectoryForSchemaIfNotExists($schemaPath)
+    {
+        $schemaPath = $this->fileSystem->normalizePath($schemaPath);
+        $pathSegments = explode("/", $schemaPath);
+        array_pop($pathSegments);
+        $dirPath = implode("/", $pathSegments);
+
+        if (!$this->fileSystem->exists($dirPath))
+            $this->fileSystem->makeDirectory($dirPath, null, true);
+    }
+
+    private function saveSchema($schemaPath, $content)
+    {
+        if ($this->fileSystem->exists($schemaPath)) {
+            $this->fileSystem->put($schemaPath, $content);
+        } else {
+            $this->createDirectoryForSchemaIfNotExists($schemaPath);
+            $this->fileSystem->put($schemaPath, $content);
+        }
+    }
+
+    private function deleteSchema($schemaPath)
+    {
+        $this->fileSystem->delete($schemaPath);
+    }
+
 }

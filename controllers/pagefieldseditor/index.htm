@@ -15,6 +15,7 @@
                 data-request="onUpdate"
                 data-hotkey="ctrl+s, cmd+s"
                 data-load-indicator="Saving schema..."
+                data-request-flash
                 class="btn btn-default">
             Save
         </button>
@@ -23,10 +24,11 @@
                 class="oc-icon-trash-o btn-icon danger pull-right"
                 data-request="onDelete"
                 data-load-indicator="Deleting schema..."
-                data-request-confirm="Do you really want to delete this schema?">
+                data-request-confirm="Do you really want to delete this schema?"
+                data-request-success="document.getElementById('btn-back').click();">
         </button>
         <span class="btn-text">
-                or <a href="<?= Backend::url('cms') . '?page=' . Request::input('page')  ?>">Back</a>
+                or <a id="btn-back" href="<?= Backend::url('cms') . '?page=' . Request::input('page')  ?>">Back</a>
         </span>
     </div>
 </div>

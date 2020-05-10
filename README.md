@@ -1,11 +1,18 @@
 # Page fields plugin
 Simple plugin allows to define your custom fields in CMS Page in October CMS.
 
-## Get started
-To define custom fields structure create new *.yaml* file with form schema. Check this [article](Defining form fields) to learn more.
+## Installation
+Currently there is a one option to install plugin in your project. 
+Open terminal, go to plugins directory in your project and run command below.
+```bash
+mkdir mkulpa & git clone https://github.com/mateuszkulpa/oc-page-fields-plugin.git ./mkulpa/pagefields
+```
 
-If you want to add fields to your *home.htm* page, you need to create *home.yaml* file in *{YOUR_THEME_DIR}/meta/page-fields/* directory.
+## Get started
+To define custom fields on your page, just click **Edit Fields** button in the CMS page toolbar.
+You will see *.yaml* editor, just write schema of a page based on native form schema.
+Check [this article](https://octobercms.com/docs/backend/forms#form-fields) to learn more.
+
 
 ## TODO
-- [ ] Page fields schema code editor available in October CMS backend
-- [ ] Graphic designer for page fields schema
+- [ ] Make fields translatable if Translate Plugin is installed
