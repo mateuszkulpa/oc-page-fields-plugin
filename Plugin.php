@@ -67,12 +67,7 @@ class Plugin extends PluginBase
     {
         $results = [];
         foreach ($fields as $key => $field) {
-            if($field['type']  === 'repeater') {
                 $results["viewBag[$key]"] = $field;
-            }
-            else {
-                $results["settings[$key]"] = $field;
-            }
         }
         return $results;
     }
